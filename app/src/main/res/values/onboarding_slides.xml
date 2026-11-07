@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="onboarding_slide_ids">
+        <item>story</item>
+        <item>describe</item>
+        <item>answers</item>
+    </string-array>
+    <string-array name="onboarding_slide_titles">
+        <item>Find a stay that fits your story</item>
+        <item>Just say what you\'re after</item>
+        <item>Answers straight from the stay</item>
+    </string-array>
+    <string-array name="onboarding_slide_bodies">
+        <item>From mountain cabins to oceanfront villas, roam helps you find unforgettable stays for every kind of trip.</item>
+        <item>Describe your trip in one sentence, like a quiet cabin with a hot tub, and roam ranks the stays that fit.</item>
+        <item>Ask about check-in, pets or cancellations and see the stay\'s own rules, word for word, with their source.</item>
+    </string-array>
+    <string-array name="onboarding_slide_images">
+        <item>https://images.unsplash.com/photo-1636886519725-6a048800b5b4?w=1200&amp;q=80&amp;auto=format&amp;fit=crop</item>
+        <item>https://images.unsplash.com/photo-1762254923872-5bdc4210eb90?w=1200&amp;q=80&amp;auto=format&amp;fit=crop</item>
+        <item>https://images.unsplash.com/photo-1473213430984-9b37e45cd8b1?w=1200&amp;q=80&amp;auto=format&amp;fit=crop</item>
+    </string-array>
+    <string-array name="onboarding_slide_locations">
+        <item>Whistler, BC</item>
+        <item>Aqaba, Jordan</item>
+        <item>Skykomish, WA</item>
+    </string-array>
+</resources>

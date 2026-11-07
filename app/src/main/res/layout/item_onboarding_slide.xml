@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/slideImage"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#DCE2D7"
+        android:contentDescription="@string/onboarding_destination_photo"
+        android:scaleType="centerCrop" />
+
+    <TextView
+        android:id="@+id/slideLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|center_horizontal"
+        android:layout_marginTop="100dp"
+        android:background="@drawable/bg_onboarding_secondary_button"
+        android:elevation="2dp"
+        android:paddingStart="15dp"
+        android:paddingTop="9dp"
+        android:paddingEnd="15dp"
+        android:paddingBottom="9dp"
+        android:textColor="#315B45"
+        android:textSize="12sp"
+        android:fontFamily="sans"
+        android:letterSpacing="0.04"
+        android:backgroundTint="#F5F3ED" />
+</FrameLayout>

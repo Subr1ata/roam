@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="theme-color" content="#f7f6f2">
+  <title>Roam — find your somewhere</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #20241f;
+      --muted: #777b73;
+      --paper: #f7f6f2;
+      --green: #315b45;
+      --line: #e7e5de;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; background: var(--paper); color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    button, input { font: inherit; }
+    .app { max-width: 540px; min-height: 100vh; margin: auto; padding: 0 22px 104px; }
+    header { height: 68px; display: flex; align-items: center; justify-content: space-between; }
+    .brand { font-family: Georgia, serif; font-size: 27px; letter-spacing: -1.4px; font-weight: 700; }
+    .brand span { color: #9d6d4a; }
+    .avatar { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: #e8dfd1; font-size: 17px; }
+    .eyebrow { color: var(--green); text-transform: uppercase; font-size: 10px; letter-spacing: 2px; font-weight: 700; margin: 22px 0 10px; }
+    h1 { font: 400 36px/1.12 Georgia, serif; letter-spacing: -.9px; margin: 0 0 20px; }
+    h1 em { color: #8b684d; font-style: italic; }
+    .search { display: flex; gap: 10px; align-items: center; padding: 14px 15px; border: 1px solid var(--line); border-radius: 14px; background: #fff; box-shadow: 0 4px 16px #332c1d09; }
+    .search svg { flex: 0 0 auto; color: #787d74; }
+    .search input { width: 100%; border: 0; outline: 0; color: var(--ink); background: transparent; font-size: 14px; }
+    .search input::placeholder { color: #9a9b94; }
+    .section-head { display: flex; align-items: baseline; justify-content: space-between; margin: 28px 0 14px; }
+    h2 { margin: 0; font: 400 23px Georgia, serif; letter-spacing: -.3px; }
+    .subtle { font-size: 12px; color: var(--muted); }
+    .filters { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; padding-bottom: 4px; }
+    .filters::-webkit-scrollbar { display: none; }
+    .chip { border: 1px solid var(--line); background: transparent; padding: 9px 14px; white-space: nowrap; border-radius: 30px; color: #62665f; font-size: 12px; }
+    .chip.active { color: white; background: var(--green); border-color: var(--green); }
+    .feature { position: relative; overflow: hidden; min-height: 212px; margin-top: 21px; border-radius: 19px; color: white; background: linear-gradient(90deg, #162a24e8 0%, #24362cc2 46%, #24362c10 100%), linear-gradient(135deg, #647b62, #b88458 52%, #d4b386); }
+    .feature::after { content: "山"; position: absolute; right: 16px; top: -38px; color: #fff3; font: 220px Georgia, serif; }
+    .feature-copy { position: relative; z-index: 1; padding: 23px 20px; max-width: 270px; }
+    .badge { display: inline-block; padding: 6px 9px; border-radius: 20px; background: #ffffff26; font-size: 10px; letter-spacing: .7px; }
+    .feature h3 { font: 400 27px/1.08 Georgia, serif; margin: 15px 0 8px; }
+    .feature p { margin: 0; color: #ffffffd9; font-size: 12px; line-height: 1.5; }
+    .feature .explore { margin-top: 15px; border: 0; border-radius: 30px; padding: 9px 14px; color: #26352b; background: #fff; font-size: 11px; font-weight: 600; }
+    .places { display: grid; grid-template-columns: 1fr 1fr; gap: 13px; }
+    .card { overflow: hidden; background: white; border: 1px solid #eeece6; border-radius: 15px; }
+    .cover { height: 114px; position: relative; display: grid; place-items: center; overflow: hidden; }
+    .cover::before, .cover::after { content: ""; position: absolute; width: 190px; height: 100px; border-radius: 50%; bottom: -49px; left: -22px; background: #354c3e; transform: rotate(-13deg); }
+    .cover::after { width: 150px; left: 65px; bottom: -58px; background: #839277; transform: rotate(17deg); }
+    .cover .emoji { position: relative; z-index: 2; font-size: 46px; filter: drop-shadow(0 5px 4px #1114); }
+    .cover.coast { background: linear-gradient(155deg, #b9d5cc, #e8c8a5 62%, #78928a); }
+    .cover.coast::before { background: #668f91; }
+    .cover.coast::after { background: #d9b98e; }
+    .cover.city { background: linear-gradient(155deg, #e9b98c, #cb815f 60%, #4c6558); }
+    .cover.city::before { background: #657767; }
+    .cover.city::after { background: #bc7655; }
+    .cover.forest { background: linear-gradient(155deg, #aebca1, #d2c8a2 55%, #5d7560); }
+    .cover.forest::before { background: #435c48; }
+    .cover.forest::after { background: #73886b; }
+    .cover.island { background: linear-gradient(155deg, #add2cd, #eed4a4 58%, #518d8b); }
+    .cover.island::before { background: #579493; }
+    .cover.island::after { background: #dfbf88; }
+    .cover.temple { background: linear-gradient(155deg, #d7c2a5, #a56d58 58%, #637969); }
+    .cover.temple::before { background: #566b55; }
+    .cover.temple::after { background: #bd8064; }
+    .save { position: absolute; z-index: 3; top: 9px; right: 9px; width: 29px; height: 29px; border: 0; border-radius: 50%; background: #ffffffdf; color: #42473f; font-size: 17px; }
+    .save.saved { color: #a44f42; }
+    .card-copy { padding: 11px 12px 13px; }
+    .place-name { font: 400 17px Georgia, serif; margin: 0 0 5px; }
+    .place-meta { color: var(--muted); font-size: 10px; }
+    .rating { float: right; color: #9a7041; font-size: 10px; }
+    .empty { grid-column: 1/-1; color: var(--muted); text-align: center; padding: 26px 8px; font-size: 13px; }
+    nav { position: fixed; z-index: 5; bottom: 0; left: 50%; transform: translateX(-50%); width: min(100%, 540px); display: flex; justify-content: space-around; padding: 12px 12px calc(12px + env(safe-area-inset-bottom)); background: #f7f6f2f2; border-top: 1px solid var(--line); backdrop-filter: blur(14px); }
+    .tab { display: grid; gap: 4px; justify-items: center; border: 0; background: transparent; color: #85877f; font-size: 9px; min-width: 52px; }
+    .tab .icon { font-size: 19px; line-height: 1; }
+    .tab.active { color: var(--green); font-weight: 700; }
+    @media (max-width: 360px) { .app { padding-inline: 16px; } h1 { font-size: 32px; } .cover { height: 100px; } }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header><div class="brand">roam<span>.</span></div><div class="avatar" aria-label="Your profile">☀️</div></header>
+    <div class="eyebrow">A little room to wander</div>
+    <h1>Find your<br><em>somewhere.</em></h1>
+    <label class="search">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m16 16 4 4"/></svg>
+      <input id="search" type="search" placeholder="Places, moods, little escapes..." aria-label="Search places">
+    </label>
+    <div class="section-head"><h2>Go by feeling</h2><span class="subtle">Pick a mood</span></div>
+    <div class="filters" id="filters" aria-label="Filter destinations">
+      <button class="chip active" data-filter="All">✦ &nbsp;For you</button>
+      <button class="chip" data-filter="Coast">🌊 &nbsp;Coastal</button>
+      <button class="chip" data-filter="Quiet">🌿 &nbsp;Quiet</button>
+      <button class="chip" data-filter="Culture">🏛 &nbsp;Culture</button>
+    </div>
+    <section class="feature" aria-label="Featured destination">
+      <div class="feature-copy">
+        <span class="badge">THE SLOW TRAVEL EDIT</span>
+        <h3>A softer side<br>of Kyoto</h3>
+        <p>Moss gardens, morning tea &amp; streets made for getting lost.</p>
+        <button class="explore" id="featureButton">Explore the guide &nbsp;↗</button>
+      </div>
+    </section>
+    <div class="section-head"><h2 id="listTitle">Places to linger</h2><span class="subtle" id="count"></span></div>
+    <section class="places" id="places" aria-live="polite"></section>
+  </main>
+  <nav aria-label="Main navigation">
+    <button class="tab active" data-tab="Explore"><span class="icon">⌕</span>Explore</button>
+    <button class="tab" data-tab="Saved"><span class="icon">♡</span>Saved</button>
+    <button class="tab" data-tab="Journal"><span class="icon">▤</span>Journal</button>
+    <button class="tab" data-tab="You"><span class="icon">◉</span>You</button>
+  </nav>
+  <script>
+    const destinations = [
+      { name: "Amalfi Coast", place: "Italy · Mediterranean", category: "Coast", mood: "Coastal", cover: "coast", icon: "🍋", rating: "4.9" },
+      { name: "Marrakech", place: "Morocco · North Africa", category: "Culture", mood: "Culture", cover: "city", icon: "🕌", rating: "4.8" },
+      { name: "Olympic Peninsula", place: "Washington · United States", category: "Quiet", mood: "Quiet", cover: "forest", icon: "🌲", rating: "4.9" },
+      { name: "Nusa Penida", place: "Bali · Indonesia", category: "Coast", mood: "Coastal", cover: "island", icon: "🌴", rating: "4.7" },
+      { name: "Kyoto", place: "Japan · Kansai", category: "Culture", mood: "Culture", cover: "temple", icon: "⛩️", rating: "5.0" }
+    ];
+    const saved = new Set(JSON.parse(localStorage.getItem("roam-saved") || "[]"));
+    let selectedFilter = "All";
+    let selectedTab = "Explore";
+
+    function render() {
+      const query = document.getElementById("search").value.trim().toLowerCase();
+      const visible = destinations.filter((place) => {
+        const matchesFilter = selectedFilter === "All" || place.category === selectedFilter;
+        const matchesQuery = `${place.name} ${place.place} ${place.mood}`.toLowerCase().includes(query);
+        return matchesFilter && matchesQuery && (selectedTab !== "Saved" || saved.has(place.name));
+      });
+      document.getElementById("count").textContent = `${visible.length} ${visible.length === 1 ? "place" : "places"}`;
+      document.getElementById("listTitle").textContent = selectedTab === "Saved" ? "Your saved places" : "Places to linger";
+      document.getElementById("places").innerHTML = visible.length ? visible.map((place) => `
+        <article class="card">
+          <div class="cover ${place.cover}">
+            <span class="emoji" aria-hidden="true">${place.icon}</span>
+            <button class="save ${saved.has(place.name) ? "saved" : ""}" data-save="${place.name}" aria-label="${saved.has(place.name) ? "Remove" : "Save"} ${place.name}">${saved.has(place.name) ? "♥" : "♡"}</button>
+          </div>
+          <div class="card-copy"><h3 class="place-name">${place.name}</h3><span class="place-meta">${place.place}</span><span class="rating">★ ${place.rating}</span></div>
+        </article>`).join("") : '<div class="empty">No places found just yet. Try another search or mood.</div>';
+    }
+
+    document.getElementById("filters").addEventListener("click", (event) => {
+      const button = event.target.closest("[data-filter]");
+      if (!button) return;
+      selectedFilter = button.dataset.filter;
+      document.querySelectorAll(".chip").forEach((chip) => chip.classList.toggle("active", chip === button));
+      render();
+    });
+    document.getElementById("places").addEventListener("click", (event) => {
+      const button = event.target.closest("[data-save]");
+      if (!button) return;
+      const name = button.dataset.save;
+      saved.has(name) ? saved.delete(name) : saved.add(name);
+      localStorage.setItem("roam-saved", JSON.stringify([...saved]));
+      render();
+    });
+    document.getElementById("search").addEventListener("input", render);
+    document.querySelector("nav").addEventListener("click", (event) => {
+      const button = event.target.closest("[data-tab]");
+      if (!button) return;
+      selectedTab = button.dataset.tab;
+      document.querySelectorAll(".tab").forEach((tab) => tab.classList.toggle("active", tab === button));
+      if (selectedTab === "Journal" || selectedTab === "You") {
+        document.getElementById("listTitle").textContent = selectedTab === "Journal" ? "Your travel journal" : "Your next chapter";
+        document.getElementById("places").innerHTML = `<div class="empty">${selectedTab === "Journal" ? "Your stories will find a home here. Start by saving a place that speaks to you." : "A little profile, a lot of possibility. Your saved places are waiting."}</div>`;
+        document.getElementById("count").textContent = "";
+      } else {
+        render();
+      }
+    });
+    document.getElementById("featureButton").addEventListener("click", () => {
+      document.getElementById("search").value = "Kyoto";
+      document.getElementById("search").dispatchEvent(new Event("input"));
+      document.getElementById("search").focus();
+    });
+    render();
+  </script>
+</body>
+</html>

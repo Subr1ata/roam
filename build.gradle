@@ -1,0 +1,12 @@
+plugins {
+    id "com.android.application" version "8.13.2" apply false
+    id "org.jetbrains.kotlin.android" version "2.4.21" apply false
+}
+
+def roamBuildDirectory = new File(gradle.gradleUserHomeDir, "roam-build")
+
+layout.buildDirectory.set(new File(roamBuildDirectory, "root"))
+
+subprojects {
+    layout.buildDirectory.set(new File(roamBuildDirectory, project.name))
+}
